@@ -47,9 +47,13 @@ git clone https://github.com/azmiao/umamusume_news
 
 2. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'
 
-然后重启 HoshinoBot即可使用
+然后重启 HoshinoBot
 
-3. 额外功能：（自动提醒）
+3. 首次使用请先使用功能`[马娘新闻初始化]`
+
+进行初始化一下，别忘了哟
+
+4. 额外功能：（自动提醒）
 
 在某个群里发消息输入下文以开启周报更新提醒（默认设置周三凌晨3点，可自行更改）
 ```
