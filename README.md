@@ -55,7 +55,7 @@ git clone https://github.com/azmiao/umamusume_news
 
 4. 额外功能：（自动提醒）
 
-在某个群里发消息输入下文以开启周报更新提醒（默认设置周三凌晨3点，可自行更改）
+在某个群里发消息输入下文以开启新闻播报
 ```
 开启 umamusume-news-poller
 ```
