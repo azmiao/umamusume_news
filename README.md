@@ -34,7 +34,7 @@ https://github.com/azmiao/umamusume_news/
 
 可看下方链接：
 
-https://www.594594.xyz/2021/05/01/umamusume_news/
+https://www.594594.xyz/2021/05/01/umamusume_news_for_hoshino/
 
 或本页面：
 
