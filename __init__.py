@@ -9,8 +9,6 @@ sv_help = '''
 =====功能=====
 [马娘新闻] 查看最近五条新闻
 
-[马娘新闻初始化] 功能限维护组
-
 （自动推送） 该功能没有命令
 '''.strip()
 
@@ -26,18 +24,6 @@ async def help(bot, ev):
 @sv.on_fullmatch(('马娘新闻','赛马娘新闻'))
 async def uma_news(bot, ev):
     await bot.send(ev, get_news())
-
-# 马娘新闻初始化
-@sv.on_fullmatch(('马娘新闻初始化'))
-async def uma_news_init(bot, ev):
-    if not priv.check_priv(ev, priv.SUPERUSER):
-        msg = '很抱歉您没有权限进行此操作，该操作仅限维护组'
-        await bot.send(ev, msg)
-        return
-
-    get_prev_id()
-    msg = '马娘新闻初始化完成，数据已更新到最新'
-    await bot.send(ev, msg)
 
 # 马娘新闻播报
 @svuma.scheduled_job('cron', minute='*/5')

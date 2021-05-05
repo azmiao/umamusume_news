@@ -2,6 +2,14 @@
 import requests
 import os
 import json
+import datetime
+import operator
+
+class news_class:
+    def __init__(self,news_time,news_url,news_title):
+        self.news_time = news_time
+        self.news_url = news_url
+        self.news_title = news_title
 
 def get_item():
     url = 'https://umamusume.jp/api/ajax/pr_info_index?format=json'
@@ -15,67 +23,52 @@ def get_item():
     }
 
     res = requests.post(url=url,data=json.dumps(data),headers=headers)
-    # 气死我了，昨晚这里因为传递参数打错了一个字，导致一直无返回数据，整到了凌晨3点没整明白，果然半夜脑子不好使
     res_dict = res.json()
     return res_dict
 
-def get_news():
+def sort_news():
     res_dict = get_item()
+    news_list = []
+    for n in range(0, 5):
+        if (res_dict['information_list'][n]['update_at'] == None):
+            news_time = res_dict['information_list'][n]['post_at']
+        else :
+            news_time = res_dict['information_list'][n]['update_at']
 
-    current_dir = os.path.join(os.path.dirname(__file__), 'prev_id.yml')
-    # current_dir = 'prev_id.yml'
-    file = open(current_dir, 'r', encoding="UTF-8")
-    init_id = int(file.read())
-    file.close()
+        news_id = res_dict['information_list'][n]['announce_id']
+        news_url = '▲https://umamusume.jp/news/detail.php?id=' + str(news_id)
+        news_title = res_dict['information_list'][n]['title']
+        news_list.append(news_class(news_time, news_url ,news_title))
 
+    news_key = operator.attrgetter('news_time')
+    news_list.sort(key = news_key, reverse = True)
+    return news_list
+
+def get_news():
+    news_list = sort_news()
     msg = '◎◎ 马娘官网新闻 ◎◎\n'
-    for m in range(0, 4):
-        if (init_id == res_dict['information_list'][m]['announce_id'] or m == 4):
-            for n in range(m, m + 5):
-                news_id = res_dict['information_list'][n]['announce_id']
-                news_url = '▲https://umamusume.jp/news/detail.php?id=' + str(news_id)
-                news_title = res_dict['information_list'][n]['title']
-                msg = msg + '\n' + news_title + '\n' + news_url
-            break
+    for news in news_list:
+        msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
     return msg
 
-def get_prev_id():
-    res_dict = get_item()
-    prev_id = res_dict['information_list'][0]['announce_id']
-    # print(prev_id)
-    current_dir = os.path.join(os.path.dirname(__file__), 'prev_id.yml')
-    # current_dir = 'prev_id.yml'
-    file = open(current_dir, 'w', encoding="UTF-8")
-    file.write(str(prev_id))
-    file.close()
-
 def news_broadcast():
-    current_dir = os.path.join(os.path.dirname(__file__), 'prev_id.yml')
-    # current_dir = 'prev_id.yml'
+    news_list = sort_news()
+    current_dir = os.path.join(os.path.dirname(__file__), 'prev_time.yml')
     file = open(current_dir, 'r', encoding="UTF-8")
-    init_id = int(file.read())
+    init_time = str(file.read())
     file.close()
-
-    res_dict = get_item()
-    prev_id = res_dict['information_list'][0]['announce_id']
-    if (int(prev_id) == init_id):
-        return
     msg = '◎◎ 马娘官网新闻更新 ◎◎\n'
-    for n in range(0, 10):
-        if (int(prev_id) != init_id):
-            news_id = res_dict['information_list'][n]['announce_id']
-            news_url = '▲https://umamusume.jp/news/detail.php?id=' + str(news_id)
-            news_title = res_dict['information_list'][n]['title']
-            prev_id = res_dict['information_list'][n+1]['announce_id']
-            msg = msg + '\n' + news_title + '\n' + news_url
-        else:
+    for news in news_list:
+        if (init_time == news.news_time):
             break
-    
-    # print(msg)
-    current_dir = os.path.join(os.path.dirname(__file__), 'prev_id.yml')
-    # current_dir = 'prev_id.yml'
+        else:
+            msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
+
+    for news in news_list:
+        set_time = news.news_time
+        break
     file = open(current_dir, 'w', encoding="UTF-8")
-    file.write(str(res_dict['information_list'][0]['announce_id']))
+    file.write(str(set_time))
     file.close()
     return msg
 
@@ -84,18 +77,27 @@ def news_broadcast():
 # 函数单独写一个，其实就是我想单独写一个函数，大家可能会很惊讶函数怎么会单独写一个呢？但事实就是这样，小编也感到非常惊讶。
 # 这就是关于函数单独写一个的事情了，大家有什么想法呢，欢迎在评论区告诉小编一起讨论哦！
 def judge() -> bool:
-    current_dir = os.path.join(os.path.dirname(__file__), 'prev_id.yml')
-    # current_dir = 'prev_id.yml'
-    file = open(current_dir, 'r', encoding="UTF-8")
-    init_id = int(file.read())
-    file.close()
+    current_dir = os.path.join(os.path.dirname(__file__), 'prev_time.yml')
+    if (os.path.exists(current_dir) == True):
+        file = open(current_dir, 'r', encoding="UTF-8")
+        init_time = str(file.read())
+        file.close()
+    else:
+        news_list = sort_news()
+        for news in news_list:
+            init_time = news.news_time
+            break
+        current_dir = os.path.join(os.path.dirname(__file__), 'prev_time.yml')
+        file = open(current_dir, 'w', encoding="UTF-8")
+        file.write(str(init_time))
+        file.close()
 
-    res_dict = get_item()
-    prev_id = res_dict['information_list'][0]['announce_id']
+    news_list = sort_news()
+    for news in news_list:
+        prev_time = news.news_time
+        break
 
-    if (int(prev_id) != init_id):
+    if (init_time != prev_time):
         return True
     else:
         return False
-# get_prev_news()
-# news_broadcast()
