@@ -59,7 +59,7 @@ def news_broadcast():
     file.close()
     msg = '◎◎ 马娘官网新闻更新 ◎◎\n'
     for news in news_list:
-        if (init_time == news.news_time):
+        if (init_time == str(news.news_time)):
             break
         else:
             msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
