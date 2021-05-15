@@ -22,7 +22,7 @@ def get_item():
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50',
     }
 
-    res = requests.post(url=url,data=json.dumps(data),headers=headers)
+    res = requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10))
     res_dict = res.json()
     return res_dict
 
