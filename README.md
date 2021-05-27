@@ -7,11 +7,9 @@
 
 ## 更新日志
 
-21-05-01    v1.0    首次测试
-
 21-05-05    v1.1    代码重写，修复了播报不能用的BUG，现按时间戳排序，今天才发现官网新闻居然不是按照时间顺序排序的
 
-PS. v1.1版本开始无需初始化，直接装上就能用
+21-05-01    v1.0    首次测试
 
 ## umamusume_news
 
@@ -34,9 +32,9 @@ https://github.com/azmiao/umamusume_news/
 
 ## 简单食用教程：
 
-可看下方链接（还没写，链接目前打不开的）：
+可看下方链接：
 
-https://www.594594.xyz/2021/05/01/umamusume_news/
+https://www.594594.xyz/2021/05/01/umamusume_news_for_hoshino/
 
 或本页面：
 
