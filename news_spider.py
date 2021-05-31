@@ -57,9 +57,11 @@ def news_broadcast():
     file = open(current_dir, 'r', encoding="UTF-8")
     init_time = str(file.read())
     file.close()
+    init_time = datetime.datetime.strptime(init_time, '%Y-%m-%d %H:%M:%S')
     msg = '◎◎ 马娘官网新闻更新 ◎◎\n'
     for news in news_list:
-        if (init_time == str(news.news_time)):
+        prev_time = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
+        if (init_time >= prev_time):
             break
         else:
             msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
@@ -96,7 +98,7 @@ def judge() -> bool:
     for news in news_list:
         prev_time = news.news_time
         break
-
+    
     if (init_time != prev_time):
         return True
     else:
