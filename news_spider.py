@@ -3,6 +3,7 @@ import requests
 import os
 import json
 import datetime
+from datetime import timedelta
 import operator
 
 class news_class:
@@ -48,7 +49,9 @@ def get_news():
     news_list = sort_news()
     msg = '◎◎ 马娘官网新闻 ◎◎\n'
     for news in news_list:
-        msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
+        time_tmp = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
+        news_time = time_tmp - timedelta(hours=1)
+        msg = msg + '\n' + str(news_time) + '\n' + news.news_title + '\n' + news.news_url + '\n'
     return msg
 
 def news_broadcast():
@@ -62,9 +65,12 @@ def news_broadcast():
     for news in news_list:
         prev_time = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
         if (init_time >= prev_time):
+            msg = '这是BUG：官网只更新了新闻时间，未更新新闻！'
             break
         else:
-            msg = msg + '\n' + news.news_time + '\n' + news.news_title + '\n' + news.news_url + '\n'
+            time_tmp = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
+            news_time = time_tmp - timedelta(hours=1)
+            msg = msg + '\n' + str(news_time) + '\n' + news.news_title + '\n' + news.news_url + '\n'
 
     for news in news_list:
         set_time = news.news_time
