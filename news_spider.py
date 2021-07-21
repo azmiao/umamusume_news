@@ -65,7 +65,6 @@ def news_broadcast():
     for news in news_list:
         prev_time = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
         if (init_time >= prev_time):
-            msg = '这是BUG：官网只更新了新闻时间，未更新新闻！'
             break
         else:
             time_tmp = datetime.datetime.strptime(news.news_time, '%Y-%m-%d %H:%M:%S')
