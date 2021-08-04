@@ -5,6 +5,7 @@ import json
 import datetime
 from datetime import timedelta
 import operator
+import translators as ts
 
 class news_class:
     def __init__(self,news_time,news_url,news_title):
@@ -108,3 +109,31 @@ def judge() -> bool:
         return True
     else:
         return False
+
+# 翻译新闻
+def translate_news(news_id):
+    url = 'https://umamusume.jp/api/ajax/pr_info_detail?format=json'
+    data = {}
+    data['announce_id'] = news_id
+    headers = {
+        'Accept': 'application/json, text/plain, */*',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50',
+    }
+    try:
+        res = requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10))
+        res_dict = res.json()
+        if res_dict['detail']['title'] == '現在確認している不具合について':
+            news_msg = res_dict['detail']['message'][:500] + '...'
+            flag = 1
+        else:
+            news_msg = res_dict['detail']['message']
+        news_text_tmp = ts.youdao(news_msg, 'ja', 'zh-CN')
+        news_text = news_text_tmp.replace('<br>', '\n')
+        news_text = news_text.replace('< br >', '\n')
+        news_text = news_text.replace('</div>', '\n')
+        news_text = news_text.replace('<div class="postscript-01">', '')
+        if flag == 1:
+            news_text = '(该新闻特别长，因此只显示前500个字符)\n\n' + news_text
+    except:
+        news_text = '错误！马娘官网连接失败或翻译失败！'
+    return news_text

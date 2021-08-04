@@ -1,11 +1,15 @@
 
 ## 注意
 
-其他功能慢慢来吧，大佬们别养马了，快来写插件，我想白嫖
+由于需要在启动时接入翻译服务器，因此打开Hoshino的时候可能会在加载时卡一小会，不影响使用
+
+其他功能在写了（
 
 虽然不一定经常更新，但要不点个star支持一下？
 
 ## 更新日志
+
+21-08-04    v1.3    新增新闻翻译功能，但功能不太稳定，新增依赖需求看下面教程2安装
 
 21-05-31    v1.2    05-15修复了插件卡死的bug，05-30修复了推送Bug(issues#2)，之前考试周+公会战没空测试，所以现在才更新
 
@@ -30,6 +34,10 @@ https://github.com/azmiao/umamusume_news/
 
 [马娘新闻] 查看最近五条新闻
 
+[新闻翻译] 查看翻译命令和新闻编号（限近5条）
+
+[新闻翻译 1] 翻译第1条新闻，编号可选值(1/2/3/4/5)
+
 （自动推送） 该功能没有命令
 
 ## 简单食用教程：
@@ -47,11 +55,18 @@ https://www.594594.xyz/2021/05/01/umamusume_news_for_hoshino/
 git clone https://github.com/azmiao/umamusume_news
 ```
 
-2. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'
+2. 安装依赖：
+
+到HoshinoBot\hoshino\modules\umamusume_news目录下，打开powershell运行
+```
+pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple
+```
+
+3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'
 
 然后重启 HoshinoBot
 
-3. 额外功能：（自动提醒）
+4. 额外功能：（自动提醒）
 
 在某个群里发消息输入下文以开启新闻播报
 ```
