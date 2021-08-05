@@ -119,6 +119,7 @@ def translate_news(news_id):
         'Accept': 'application/json, text/plain, */*',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50',
     }
+    flag = 0
     try:
         res = requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10))
         res_dict = res.json()
@@ -127,6 +128,10 @@ def translate_news(news_id):
             flag = 1
         else:
             news_msg = res_dict['detail']['message']
+    except:
+        news_text = '错误！马娘官网连接失败'
+        return news_text
+    try:
         news_text_tmp = ts.youdao(news_msg, 'ja', 'zh-CN')
         news_text = news_text_tmp.replace('<br>', '\n')
         news_text = news_text.replace('< br >', '\n')
@@ -135,5 +140,8 @@ def translate_news(news_id):
         if flag == 1:
             news_text = '(该新闻特别长，因此只显示前500个字符)\n\n' + news_text
     except:
-        news_text = '错误！马娘官网连接失败或翻译失败！'
+        # 用于检查错误
+        print('error_check --> news_msg: ' + news_msg)
+        print('error_check --> news_text_tmp: ' + news_text_tmp)
+        news_text = '错误！翻译失败！'
     return news_text
