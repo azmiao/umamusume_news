@@ -1,11 +1,14 @@
 # -*- coding: UTF-8 -*-
 import requests
-import os
+import os,base64
+import re
 import json
 import datetime
 from datetime import timedelta
 import operator
 import translators as ts
+from io import BytesIO
+from hoshino import R
 
 class news_class:
     def __init__(self,news_time,news_url,news_title):
@@ -110,6 +113,20 @@ def judge() -> bool:
     else:
         return False
 
+# 替换文本
+def replace_text(text_tmp):
+    text = text_tmp.replace('&nbsp;', ' ')
+    text = text.replace('<br>', '\n')
+    text = text.replace('</div>', '\n')
+    text = text.replace('<div class="postscript-01">', '')
+    text = text.replace('</span>', '')
+    text = text.replace('<span title=\"\">', '')
+    text = text.replace('<h2 class="heading">', '\n\n')
+    text = text.replace('</h2>', '\n\n')
+    text = text.replace('のピース', '的碎片')
+    text = re.sub(r'<figure>.+?<\/figure>', '', text)
+    return text
+
 # 翻译新闻
 def translate_news(news_id):
     url = 'https://umamusume.jp/api/ajax/pr_info_detail?format=json'
@@ -128,20 +145,30 @@ def translate_news(news_id):
             flag = 1
         else:
             news_msg = res_dict['detail']['message']
+        news_msg = replace_text(news_msg)
     except:
         news_text = '错误！马娘官网连接失败'
         return news_text
     try:
-        news_text_tmp = ts.youdao(news_msg, 'ja', 'zh-CN')
-        news_text = news_text_tmp.replace('<br>', '\n')
-        news_text = news_text.replace('< br >', '\n')
-        news_text = news_text.replace('</div>', '\n')
-        news_text = news_text.replace('<div class="postscript-01">', '')
+        news_text = ts.youdao(news_msg, 'ja', 'zh-CN')
         if flag == 1:
             news_text = '(该新闻特别长，因此只显示前500个字符)\n\n' + news_text
+        if res_dict['detail']['image_big'] != '':
+            img_url = res_dict['detail']['image_big']
+            response = requests.get(img_url)
+            ls_f = base64.b64encode(BytesIO(response.content).read())
+            imgdata = base64.b64decode(ls_f)
+            save_dir = R.img('umamusume_news').path
+            path_dir = os.path.join(save_dir,'news_img.jpg')
+            file = open(path_dir,'wb')
+            file.write(imgdata)
+            file.close()
+            news_img = ' '.join(map(str, [
+                R.img(f'umamusume_news/news_img.jpg').cqcode,
+            ]))
+            news_text = f'{news_img}' + news_text
     except:
         # 用于检查错误
         print('error_check --> news_msg: ' + news_msg)
-        print('error_check --> news_text_tmp: ' + news_text_tmp)
         news_text = '错误！翻译失败！'
     return news_text

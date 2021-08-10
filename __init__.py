@@ -1,4 +1,5 @@
 import os
+import shutil
 import hoshino
 from hoshino import Service, R, priv
 from hoshino.typing import *
@@ -16,6 +17,12 @@ sv_help = '''=====功能=====
 
 _limtime = 20    # 单个人翻译冷却时间（单位：喵）
 _flmt = FreqLimiter(_limtime)
+
+if os.path.exists(R.img('umamusume_news').path):
+    shutil.rmtree(R.img('umamusume_news').path)  #删除目录，包括目录下的所有文件
+    os.mkdir(R.img('umamusume_news').path)
+else:
+    os.mkdir(R.img('umamusume_news').path)
 
 sv = Service('umamusume_news', help_=sv_help, enable_on_default=True, bundle='马娘新闻订阅')
 svuma = Service('umamusume-news-poller', enable_on_default=False, help_='马娘新闻播报')
