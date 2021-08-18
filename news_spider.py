@@ -113,16 +113,20 @@ def judge() -> bool:
     else:
         return False
 
-# 替换文本
+# 替换不必要的文本
 def replace_text(text_tmp):
     text = text_tmp.replace('&nbsp;', ' ')
     text = text.replace('<br>', '\n')
     text = text.replace('</div>', '\n')
     text = text.replace('<div class="postscript-01">', '')
+    text = re.sub(r'<span.+?>', '', text)
     text = text.replace('</span>', '')
     text = text.replace('<span title=\"\">', '')
     text = text.replace('<h2 class="heading">', '\n\n')
+    text = text.replace('<h3 class="subheading">', '\n\n')
     text = text.replace('</h2>', '\n\n')
+    text = text.replace('</h3>', '\n\n')
+    text = text.replace('<h3>', '\n\n')
     text = text.replace('のピース', '的碎片')
     text = re.sub(r'<figure>.+?<\/figure>', '', text)
     return text
