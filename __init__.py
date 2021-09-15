@@ -54,7 +54,12 @@ async def select_source(bot, ev):
     if not _flmt.check(uid):
         await bot.send(ev, f'请勿频繁操作，冷却时间为{_limtime}秒！', at_sender=True)
         return
-    news_list = sort_news()
+    try:
+        news_list = sort_news()
+    except:
+        msg = '错误！马娘官网连接失败'
+        await bot.send(ev, msg)
+        return
     num_i = 0
     msg_c = '马娘新闻列表：'
     for news in news_list:
