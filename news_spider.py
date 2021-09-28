@@ -8,6 +8,7 @@ from datetime import timedelta
 import operator
 import translators as ts
 from io import BytesIO
+import yaml
 from hoshino import R
 
 class news_class:
@@ -115,6 +116,7 @@ def judge() -> bool:
 
 # 替换不必要的文本
 def replace_text(text_tmp):
+    # 替换多余的html关键字
     text = text_tmp.replace('&nbsp;', ' ')
     text = text.replace('<br>', '\n')
     text = text.replace('</div>', '\n')
@@ -127,9 +129,23 @@ def replace_text(text_tmp):
     text = text.replace('</h2>', '\n\n')
     text = text.replace('</h3>', '\n\n')
     text = text.replace('<h3>', '\n\n')
-    text = text.replace('のピース', '的碎片')
     text = re.sub(r'<figure>.+?<\/figure>', '', text)
+    # 替换赛马娘游戏术语
+    current_dir = os.path.join(os.path.dirname(__file__), 'replace_dict.json')
+    file = open(current_dir, 'r', encoding = 'UTF-8')
+    file_data = file.read()
+    file.close()
+    config = yaml.load(file_data, Loader = yaml.FullLoader)
+    keys_list = list(config.keys())
+    for key in keys_list:
+        value = config[key]
+        text = text.replace(f'{key}', f'{value}')
     return text
+
+# 翻译完如果把中文又翻译一遍导致出问题可以在这里，再次替换一下？
+def second_replace(news_text):
+    # news_text = news_text.replace('', '') # 我先注释了
+    return news_text
 
 # 翻译新闻
 def translate_news(news_id):
@@ -155,6 +171,7 @@ def translate_news(news_id):
         return news_text
     try:
         news_text = ts.youdao(news_msg, 'ja', 'zh-CN')
+        news_text = second_replace(news_text)
         if flag == 1:
             news_text = '(该新闻特别长，因此只显示前500个字符)\n\n' + news_text
         if res_dict['detail']['image_big'] != '':
