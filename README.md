@@ -32,6 +32,8 @@ news_text = news_text.replace('大米洗澡', '米浴')
 
 2. v1.5新增了马娘名/其他游戏术语的文本替换，替换内容均在`replace_dict.json`里，后续好兄弟们觉得可以增加可以直接pull request
 
+3. 如果只更新文件`replace_dict.json`的时候可直接热重载，更新完改文件后无需重新启动hoshinobot
+
 ## umamusume_news
 
 一个适用hoshinobot的赛马娘新闻插件，用于提供马娘新闻播报功能
