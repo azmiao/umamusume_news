@@ -124,6 +124,8 @@ def replace_text(text_tmp):
     text = re.sub(r'<span.+?>', '', text)
     text = text.replace('</span>', '')
     text = text.replace('<span title=\"\">', '')
+    text = text.replace('<strong>', '')
+    text = text.replace('</strong>', '')
     text = text.replace('<h2 class="heading">', '\n\n')
     text = text.replace('<h3 class="subheading">', '\n\n')
     text = text.replace('</h2>', '\n\n')
