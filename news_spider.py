@@ -9,7 +9,19 @@ import operator
 import translators as ts
 from io import BytesIO
 import yaml
+import random
+import time
 from hoshino import R
+
+user_agent_list = ["Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; …) Gecko/20100101 Firefox/61.0",
+    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36",
+    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)",
+    "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10.5; en-US; rv:1.9.2.15) Gecko/20110303 Firefox/3.6.15",
+    ]
 
 class news_class:
     def __init__(self,news_time,news_url,news_title):
@@ -18,6 +30,7 @@ class news_class:
         self.news_title = news_title
 
 def get_item():
+    time.sleep(1)
     url = 'https://umamusume.jp/api/ajax/pr_info_index?format=json'
     data = {}
     data['announce_label'] = 0
@@ -25,11 +38,18 @@ def get_item():
     data['offset'] = 0
     headers = {
         'Accept': 'application/json, text/plain, */*',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50',
+        'User-Agent': random.choice(user_agent_list),
+        'Connection': 'close',
+        'origin': 'https://umamusume.jp',
+        'referer': 'https://umamusume.jp/news',
+        'accept': 'application/json, text/plain, */*',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+        'content-type': 'application/json;charset=UTF-8'
     }
-
-    res = requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10))
-    res_dict = res.json()
+    with requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10), stream = True) as res:
+        res_dict = res.json()
+        res.close()
     return res_dict
 
 def sort_news():
@@ -118,20 +138,19 @@ def judge() -> bool:
 def replace_text(text_tmp):
     # 替换多余的html关键字
     text = text_tmp.replace('&nbsp;', ' ')
-    text = text.replace('<br>', '\n')
-    text = text.replace('</div>', '\n')
-    text = text.replace('<div class="postscript-01">', '')
-    text = re.sub(r'<span.+?>', '', text)
+    text = re.sub(r'<div.*?>', '', text)
+    text = text.replace('</div>', '')
+    text = re.sub(r'<span.*?>', '', text)
     text = text.replace('</span>', '')
-    text = text.replace('<span title=\"\">', '')
-    text = text.replace('<strong>', '')
+    text = re.sub(r'<strong.*?>', '', text)
     text = text.replace('</strong>', '')
-    text = text.replace('<h2 class="heading">', '\n\n')
-    text = text.replace('<h3 class="subheading">', '\n\n')
-    text = text.replace('</h2>', '\n\n')
-    text = text.replace('</h3>', '\n\n')
-    text = text.replace('<h3>', '\n\n')
-    text = re.sub(r'<figure>.+?<\/figure>', '', text)
+    text = re.sub(r'<h2.*?>', '\n', text)
+    text = text.replace('</h2>', '')
+    text = re.sub(r'<h3.*?>', '\n', text)
+    text = text.replace('</h3>', '')
+    text = re.sub(r'<figure>.*?<\/figure>', '', text)
+    text = re.sub(r'<exclusion-game>.*<\/exclusion-game>', '', text)
+    text = re.sub(r'<br>', '\n\n', text)
     # 替换赛马娘游戏术语
     current_dir = os.path.join(os.path.dirname(__file__), 'replace_dict.json')
     file = open(current_dir, 'r', encoding = 'UTF-8')
@@ -151,17 +170,26 @@ def second_replace(news_text):
 
 # 翻译新闻
 def translate_news(news_id):
+    time.sleep(1)
     url = 'https://umamusume.jp/api/ajax/pr_info_detail?format=json'
     data = {}
     data['announce_id'] = news_id
     headers = {
         'Accept': 'application/json, text/plain, */*',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50',
+        'User-Agent': random.choice(user_agent_list),
+        'Connection': 'close',
+        'origin': 'https://umamusume.jp',
+        'referer': 'https://umamusume.jp/news',
+        'accept': 'application/json, text/plain, */*',
+        'accept-encoding': 'gzip, deflate, br',
+        'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+        'content-type': 'application/json;charset=UTF-8'
     }
     flag = 0
     try:
-        res = requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10))
-        res_dict = res.json()
+        with requests.post(url=url,data=json.dumps(data),headers=headers, timeout=(5,10), stream = True) as res:
+            res_dict = res.json()
+            res.close()
         if res_dict['detail']['title'] == '現在確認している不具合について':
             news_msg = res_dict['detail']['message'][:500] + '...'
             flag = 1
