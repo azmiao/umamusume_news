@@ -217,8 +217,11 @@ def translate_news(news_id):
                 R.img(f'umamusume_news/news_img.jpg').cqcode,
             ]))
             news_text = f'{news_img}' + news_text
-    except:
+    except Exception as e:
         # 用于检查错误
-        print('error_check --> news_msg: ' + news_msg)
-        news_text = '错误！翻译失败！'
+        # print('error_check --> news_msg: ' + news_msg)
+        e_msg = e
+        if str(e) == 'The length of the text to be translated exceeds the limit.':
+            e_msg = '详细原因：文章长度过长，禁止翻译！请移步马娘官网查看！'
+        news_text = f'错误！翻译失败！{e_msg}'
     return news_text
