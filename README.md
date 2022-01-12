@@ -1,7 +1,7 @@
 
 ## 注意
 
-由于需要在启动时接入翻译服务器，因此打开Hoshino的时候可能会在加载时卡一小会，不影响使用
+~~由于需要在启动时接入翻译服务器，因此打开Hoshino的时候可能会在加载时卡一小会，不影响使用~~  ==>  v1.7已经去除
 
 有什么其他功能需求欢迎提交issue
 
@@ -9,19 +9,15 @@
 
 ## 更新日志
 
+22-01-11    v1.7    精简翻译功能，去除了每次启动星乃的连接翻译服务器时间，无需安装翻译依赖了，所以可以`pip uninstall translators`了
+
 21-11-09    v1.6    修复部分Html代码的影响，并通过各种预防方法尽量让插件不容易被马娘官网的反爬虫发现
 
 21-09-28    v1.5    新增马娘名/其他游戏术语替换，让翻译更加好康一点？
 
 21-08-10    v1.4    翻译乱码修正，再新增头图显示，方便翻译卡池预告的时候看到马娘和支援卡的图片(限卡池新闻)，BTW：手机QQ记得点开图片看不然显示不完整
 
-21-08-04    v1.3    新增新闻翻译功能，但功能不太稳定，新增依赖需求看下面教程2安装
-
-21-05-31    v1.2    05-15修复了插件卡死的bug，05-30修复了推送Bug(issues#2)，之前考试周+公会战没空测试，所以现在才更新
-
-21-05-05    v1.1    代码重写，修复了播报不能用的BUG，现按时间戳排序，今天才发现官网新闻居然不是按照时间顺序排序的
-
-21-05-01    v1.0    首次测试
+21-08-04    v1.3-v1.0    略~ （~~太多了，直接删了~~）
 
 ## 使用前须知
 
@@ -80,7 +76,7 @@ git clone https://github.com/azmiao/umamusume_news
 
 到HoshinoBot\hoshino\modules\umamusume_news目录下，打开powershell运行
 ```
-pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple
+pip install yaml -i http://mirrors.aliyun.com/pypi/simple
 ```
 
 3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'

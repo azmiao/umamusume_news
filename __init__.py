@@ -40,12 +40,15 @@ async def uma_news(bot, ev):
 # 马娘新闻播报
 @svuma.scheduled_job('cron', minute='*/5')
 async def uma_news_poller():
-    if (judge() == True):
-        svuma.logger.info('检测到马娘新闻更新！')
-        await svuma.broadcast(news_broadcast(), 'umamusume-news-poller', 0.2)
-    else:
-        svuma.logger.info('暂未检测到马娘新闻更新')
-        return
+    try:
+        if (judge() == True):
+            svuma.logger.info('检测到马娘新闻更新！')
+            await svuma.broadcast(news_broadcast(), 'umamusume-news-poller', 0.2)
+        else:
+            svuma.logger.info('暂未检测到马娘新闻更新')
+            return
+    except Exception as e:
+        svuma.logger.info(f'马娘官网连接失败，具体原因：{e}')
 
 # 选择翻译新闻
 @sv.on_prefix('新闻翻译')
@@ -56,8 +59,8 @@ async def select_source(bot, ev):
         return
     try:
         news_list = sort_news()
-    except:
-        msg = '错误！马娘官网连接失败'
+    except Exception as e:
+        msg = f'错误！马娘官网连接失败，原因：{e}'
         await bot.send(ev, msg)
         return
     num_i = 0

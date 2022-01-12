@@ -6,7 +6,7 @@ import json
 import datetime
 from datetime import timedelta
 import operator
-import translators as ts
+from .translator_lite.apis import youdao
 from io import BytesIO
 import yaml
 import random
@@ -199,7 +199,7 @@ def translate_news(news_id):
         news_text = '错误！马娘官网连接失败'
         return news_text
     try:
-        news_text = ts.youdao(news_msg, 'ja', 'zh-CN')
+        news_text = youdao(news_msg, 'ja', 'zh')
         news_text = second_replace(news_text)
         if flag == 1:
             news_text = '(该新闻特别长，因此只显示前500个字符)\n\n' + news_text
