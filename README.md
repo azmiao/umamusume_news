@@ -1,7 +1,6 @@
+# 2022-03-04 本插件已整合进 [uma_plugin](https://github.com/azmiao/uma_plugin) ，虽然目前后续更新两个仓库都会同步更新，但强烈建议直接使用整合版，有更多功能
 
 ## 注意
-
-~~由于需要在启动时接入翻译服务器，因此打开Hoshino的时候可能会在加载时卡一小会，不影响使用~~  ==>  v1.7已经去除
 
 有什么其他功能需求欢迎提交issue
 
@@ -76,7 +75,7 @@ git clone https://github.com/azmiao/umamusume_news
 
 到HoshinoBot\hoshino\modules\umamusume_news目录下，打开powershell运行
 ```
-pip install yaml -i http://mirrors.aliyun.com/pypi/simple
+pip install pyyaml -i http://mirrors.aliyun.com/pypi/simple
 ```
 
 3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'
