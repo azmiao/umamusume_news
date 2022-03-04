@@ -76,6 +76,7 @@ git clone https://github.com/azmiao/umamusume_news
 到HoshinoBot\hoshino\modules\umamusume_news目录下，打开powershell运行
 ```
 pip install pyyaml -i http://mirrors.aliyun.com/pypi/simple
+pip install pathos -i http://mirrors.aliyun.com/pypi/simple
 ```
 
 3. 在 HoshinoBot\hoshino\config\ `__bot__.py` 文件的 MODULES_ON 加入 'umamusume_news'
