@@ -1,12 +1,8 @@
-# 2022-03-04 本插件已整合进 [uma_plugin](https://github.com/azmiao/uma_plugin) ，虽然目前后续更新两个仓库都会同步更新，但强烈建议直接使用整合版，有更多功能
-
-## 注意
-
-有什么其他功能需求欢迎提交issue
-
-虽然不一定经常更新，但要不点个star支持一下？
+# 2022-03-04 本插件已整合进 [uma_plugin](https://github.com/azmiao/uma_plugin) ，虽然目前后续更新两个仓库都会同步更新，但强烈建议直接使用整合版，有更多功能，另外整合版的新闻插件和本插件代码仍有部分不同。
 
 ## 更新日志
+
+22-04-28    v1.8    和整合版部分代码同步，全部更换异步函数，并移除pyyaml的依赖，减少一点响应延迟
 
 22-01-11    v1.7    精简翻译功能，去除了每次启动星乃的连接翻译服务器时间，无需安装翻译依赖了，所以可以`pip uninstall translators`了
 
@@ -27,11 +23,7 @@
 news_text = news_text.replace('大米洗澡', '米浴')
 ```
 
-2. v1.5新增了马娘名/其他游戏术语的文本替换，替换内容均在`replace_dict.json`里，后续好兄弟们觉得可以增加可以直接pull request
-
-3. 如果只更新文件`replace_dict.json`的时候可直接热重载，更新完改文件后无需重新启动hoshinobot
-
-4. v1.6开始使用命令反应可能会慢一拍，因为我加了1秒的延迟
+2. 马娘名/其他游戏术语的文本替换在`replace_dict.json`里，但无法自动更新，但马娘插件整合版可以自动更新
 
 ## umamusume_news
 
@@ -75,7 +67,6 @@ git clone https://github.com/azmiao/umamusume_news
 
 到HoshinoBot\hoshino\modules\umamusume_news目录下，打开powershell运行
 ```
-pip install pyyaml -i http://mirrors.aliyun.com/pypi/simple
 pip install pathos -i http://mirrors.aliyun.com/pypi/simple
 ```
 
