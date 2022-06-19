@@ -1,4 +1,6 @@
-# 2022-03-04 本插件已整合进 [uma_plugin](https://github.com/azmiao/uma_plugin) ，虽然目前后续更新两个仓库都会同步更新，但强烈建议直接使用整合版，有更多功能，另外整合版的新闻插件和本插件代码仍有部分不同。
+# 本插件已整合进 [uma_plugin](https://github.com/azmiao/uma_plugin) 性能更好，翻译显示更快
+
+## 本仓库将不再更新，但是会保持一直能用（应该也不会不能用的
 
 ## 更新日志
 
